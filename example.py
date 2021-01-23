@@ -25,7 +25,7 @@ Esel = selection_sampling(Jdict, array_length(M, N), coarray_length(M, N))
 Eavg = averaging_sampling(Jdict, array_length(M, N), coarray_length(M, N))
 # Nominal coarray autocorrelation matrix
 F = smoothing_matrix(coarray_length(M, N))
-Z = spatial_smoothing(F, Esel.T @ R.flatten())
+Z = spatial_smoothing(F, Esel.T @ R.flatten('F'))
 # Sample support axis and number of realizations
 number_of_snapshots_axis = [1, 100, 200, 300, 400]
 number_of_realizations = 1500
@@ -42,7 +42,7 @@ for i, Q in enumerate(number_of_snapshots_axis):
     for j in range(number_of_realizations): 
         Y = snapshots(S, source_powers, noise_power, Q)
         Rest = autocorrelation_matrix_est(Y)
-        r = Rest.flatten()
+        r = Rest.flatten('F')
         Zsel = spatial_smoothing(F, Esel.T @ r)
         Zavg = spatial_smoothing(F, Eavg.T @ r)
         err_sel_numerical[i , j] = np.linalg.norm(Z-Zsel, 'fro') ** 2
